@@ -6,7 +6,7 @@ composer require sholokhov/bitrix-option
 ``
 
 <h2>Требования</h2>
-<li>PHP 8.2 и вышек</li>
+<li>PHP 8.2 и выше</li>
 <li>Bitrix 12.0.7 и выше</li>
 
 <h2>Описание</h2>
