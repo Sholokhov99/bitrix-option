@@ -1,0 +1,24 @@
+{
+  "name": "sholokhov/bitrix-option",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "bitrix",
+    "options",
+    "b_option"
+  ],
+  "authors": [
+    {
+      "name": "Daniil",
+      "email": "sholokhov.daniil@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Sholokhov\\BitrixOption\\": "src"
+    }
+  },
+  "require": {
+    "php": "^8.2"
+  }
+}
