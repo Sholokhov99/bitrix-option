@@ -26,7 +26,7 @@ class Manager
     /**
      * Конфигурация  загрузки
      *
-     * @var array{module: string, name: string, siteID: string, storage: StorageInterface|string}
+     * @var array{module: string, name: string, siteID: string, storage: string}
      */
     private readonly array $configuration;
 

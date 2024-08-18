@@ -137,3 +137,68 @@ $manager->refresh();
 // Сохранится пустое значение, т.к. связь с  $storage разорвана
 $manager->save();
 ```
+
+<h3>Инициализация на основе объекта</h3>
+Возможно инициализировать менеджера конфигураций на основе объекта. Объект должен описывать трибут ``Sholokhov\BitrixOption\Attributes\Option``
+
+<h4>Пример описания атрибута</h4>
+
+```injectablephp
+use Sholokhov\BitrixOption\Attributes\Option;
+
+#[Option(module: 'sms.sender', name: 'connection', storage: ConnectionDTO::class)]
+class Connection
+{
+    ...
+}
+```
+
+<h4>Инициализация объекта</h4>
+
+```injectablephp
+use Sholokhov\BitrixOption\AttributeManager;
+
+// Способ 1
+$manager = new AttributeManager(Connection::class);
+$storage = $manager->get();
+
+// Способ 2
+$manager = new AttributeManager(new Connection(), 's1');
+$storage = $manager->get();
+```
+
+<h3>Сборщик конфигураций</h3>
+Является оберткой над простой инициализацией объекта. 
+Служит, для упрощения кода и абстрагирование от логики инициализации объекта
+
+<h4>Инициализация на основе конфигуратора в виде массива</h4> 
+
+```injectablephp
+use Sholokhov\BitrixOption\Manager;
+use Sholokhov\BitrixOption\Builder\Loader;
+
+$config = [
+    'module' => 'sms.sender',
+    'name' => 'connection',
+    'siteID' => 's5',
+    'storage' => ConnectionDTO::class
+];
+
+$manager = new Manager($configuration);
+
+// Аналог
+$manager = Loader::load($config);
+```
+
+<h4>Инициализация на основе объекта</h4>
+
+```injectablephp
+use Sholokhov\BitrixOption\AttributeManager;
+use Sholokhov\BitrixOption\Builder\Loader;
+
+$manager = new AttributeManager(Connection::class);
+
+// Аналог
+$manager = Loader::loadByEntity(Connection::class);
+
+````
