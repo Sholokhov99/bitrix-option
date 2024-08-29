@@ -31,13 +31,6 @@ class Manager
     private readonly array $configuration;
 
     /**
-     * Значение параметра
-     *
-     * @var string|null
-     */
-    private ?string $value = null;
-
-    /**
      * @param array{module: string, name: string, siteID: string, storage: string} $config
      */
     public function __construct(array $config)
@@ -60,6 +53,19 @@ class Manager
     }
 
     /**
+     * Установка значения параметра
+     *
+     * @param StorageInterface $storage
+     * @return Result
+     * @throws Exception
+     */
+    public function set(StorageInterface $storage): Result
+    {
+        $this->storage = $storage;
+        return $this->save();
+    }
+
+    /**
      * Сохранение настроек
      *
      * @return Result
@@ -77,16 +83,6 @@ class Manager
         }
 
         return $result;
-    }
-
-    /**
-     * Получение значения параметра в "чистом" виде
-     *
-     * @return string|null
-     */
-    public function getOriginal(): ?string
-    {
-        return $this->value;
     }
 
     /**
@@ -140,32 +136,18 @@ class Manager
      */
     public function load(): void
     {
-        $this->set($this->search());
+        $this->storage = $this->search();
     }
 
     /**
      * Поиск значения параметра
      *
-     * @return array{value: string, storage: StorageInterface}
+     * @return StorageInterface
      */
-    private function search(): array
+    private function search(): StorageInterface
     {
         $value = Option::get($this->getModule(), $this->getName(), '', $this->getSiteID());
-        $storage = $this->configuration['storage']::fromString($value);
-
-        return compact('value', 'storage');
-    }
-
-    /**
-     * Установка значения парамтера
-     *
-     * @param array $data
-     * @return void
-     */
-    private function set(array $data): void
-    {
-        $this->value = $data['value'];
-        $this->storage = $data['storage'];
+        return $this->configuration['storage']::fromString($value);
     }
 
     /**
