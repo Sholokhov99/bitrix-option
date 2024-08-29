@@ -120,7 +120,7 @@ if (!$result->isSuccess()) {
 При необходимости актуализации значения параметра можно воспользоваться методом
 
 ```injectablephp
-$storage = $manager->refresh();
+$storage = $manager->load();
 ```
 
 <b>ВНИМАНИЕ</b>
@@ -132,10 +132,15 @@ $manager = new Manager($configuration);
 $storage = $manager->get();
 
 $storage->host = 'localhost';
-$manager->refresh();
+$manager->laod();
 
 // Сохранится пустое значение, т.к. связь с  $storage разорвана
 $manager->save();
+```
+
+<h3>Удаление параметра</h3>
+```injectablephp
+$manager->remove();
 ```
 
 <h3>Инициализация на основе объекта</h3>

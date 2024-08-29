@@ -9,6 +9,7 @@ use InvalidArgumentException;
 
 use Bitrix\Main\Error;
 use Bitrix\Main\Result;
+use Bitrix\Main\ArgumentNullException;
 use Bitrix\Main\Config\Option;
 
 /**
@@ -45,11 +46,7 @@ class Manager
      */
     public function get(): StorageInterface
     {
-        if (null === $this->storage) {
-            $this->load();
-        }
-
-        return $this->storage;
+        return $this->storage ??= $this->load();
     }
 
     /**
@@ -63,6 +60,23 @@ class Manager
     {
         $this->storage = $storage;
         return $this->save();
+    }
+
+    /**
+     * Удаление настроек
+     *
+     * @return void
+     * @throws ArgumentNullException
+     */
+    public function remove(): void
+    {
+        $filter = [
+            'name' => $this->getName(),
+            'site_id' => $this->getSiteID()
+        ];
+
+        Option::delete($this->getModule(), $filter);
+        $this->storage = null;
     }
 
     /**
@@ -86,17 +100,16 @@ class Manager
     }
 
     /**
-     * Загрузка настроек
+     * Загрузка значения параметра
      *
      * Если в хранилище {@see self::$config::$storage()} не зафиксированы изменения,
      * то они будут утеряны
      *
      * @return StorageInterface
      */
-    public function refresh(): StorageInterface
+    public function load(): StorageInterface
     {
-        $this->load();
-        return $this->get();
+        return $this->storage = $this->search();
     }
 
     /**
@@ -127,16 +140,6 @@ class Manager
     public function getSiteID(): string
     {
         return $this->configuration['siteID'];
-    }
-
-    /**
-     * Загрузка значения параметра
-     *
-     * @return void
-     */
-    public function load(): void
-    {
-        $this->storage = $this->search();
     }
 
     /**
